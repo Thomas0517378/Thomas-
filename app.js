@@ -61,10 +61,10 @@
 
   const colors = { green: '#4e9b72', purple: '#735b91', orange: '#d98c4a', red: '#bd5048' };
   const svgText = (x, y, value, options = '') => `<text x="${x}" y="${y}" ${options}>${esc(value)}</text>`;
-  function frame(id, min, max, ticks, labels, title, description, unit = '万元') {
+  function frame(id, min, max, ticks, labels, title, description, unit = '万元', inset = false) {
     const w = Math.max(310, $(id).clientWidth || 620), h = 260, left = 49, right = 32, top = 28, bottom = 34;
     const pw = w-left-right, ph = h-top-bottom;
-    const x = i => left + pw * i / (labels.length-1);
+    const x = i => left + pw * (inset ? (i + .5) / labels.length : i / (labels.length-1));
     const y = v => top + ph * (max-v) / (max-min);
     let body = ticks.map(v => `<line x1="${left}" x2="${w-right}" y1="${y(v)}" y2="${y(v)}" stroke="${v === 0 ? '#adbfb0' : '#e8ede8'}"${v === 0 ? ' stroke-width="1.4"' : ''}/>${svgText(left-9,y(v)+4,fmt(v,0),'text-anchor="end" class="axis-text"')}`).join('');
     body += labels.map((s,i) => svgText(x(i),h-8,s,'text-anchor="middle" class="axis-text"')).join('');
@@ -87,7 +87,7 @@
   }
   function costChart() {
     const ss = [{label:'收入',values:D.revenue,color:colors.green},{label:'营业成本',values:D.cost,color:colors.orange},{label:'期间费用',values:D.expenses,color:colors.purple}];
-    const f = frame('cost-chart',0,180,[0,45,90,135,180],D.years,'五年收入、成本与费用对比',ss.map(s=>s.label+' '+s.values.join('、')).join('；'));
+    const f = frame('cost-chart',0,180,[0,45,90,135,180],D.years,'五年收入、成本与费用对比',ss.map(s=>s.label+' '+s.values.join('、')).join('；'),'万元',true);
     const bw = Math.min(25,f.pw/26);
     let content = '';
     ss.forEach((s,k) => s.values.forEach((v,i) => {
@@ -101,7 +101,7 @@
     const min = Math.min(0,...values)<0 ? -5 : 0, max = id === 'labor-chart' ? 6 : 60;
     const ticks = id === 'labor-chart' ? [-4,-2,0,2,4,6] : [0,15,30,45,60];
     const description = labels.map((l,i)=>`${l}：净利润 ${fmt(values[i])} 万元`).join('；');
-    const f = frame(id,min,max,ticks,labels,'净利润敏感性',description);
+    const f = frame(id,min,max,ticks,labels,'净利润敏感性',description,'万元',true);
     const width = Math.min(68,f.pw/(labels.length*2.2));
     const content = values.map((v,i) => {
       const color = v < 0 ? colors.red : colors.green;
