@@ -1,149 +1,226 @@
 (() => {
-  const years = ["第1年", "第2年", "第3年", "第4年", "第5年"];
-  const data = {
-    revenue: [6.8, 22, 53, 100, 168],
-    product: [5.6, 15.5, 31.8, 56, 88],
-    subscription: [.8, 3, 8, 18, 37],
-    b2b: [.2, 2, 8.5, 20, 36],
-    other: [.2, 1.5, 4.7, 6, 7],
-    cost: [2.72, 8.14, 18.55, 33, 53.76],
-    grossProfit: [4.08, 13.86, 34.45, 67, 114.24],
-    expenses: [11.48, 19.26, 29.75, 46.6, 68.74],
-    team: [6, 9, 14, 18, 20],
-    marketing: [1.6, 2.6, 4.5, 7, 10],
-    operations: [1.8, 3.5, 5.2, 7.8, 12],
-    impact: [1.2, 2.2, 3.5, 5.4, 7],
-    otherExpense: [.88, 1.96, 2.55, 8.4, 19.74],
-    netProfit: [-7.4, -5.4, 4.7, 20.4, 45.5],
-    cashStart: [7, 5.6, 3.7, 6.4, 23.8],
-    operatingCash: [-.2, -5.9, 4.2, 19.2, 42.9],
-    investingCash: [-1.2, -1, -1.5, -1.8, -2.4],
-    financingCash: [0, 5, 0, 0, 0],
-    cashEnd: [5.6, 3.7, 6.4, 23.8, 64.3]
-  };
+  'use strict';
+  const D = window.FUYI_DATA;
+  const $ = id => document.getElementById(id);
+  const setHTML = (id, html) => { $(id).innerHTML = html; };
+  const fmt = (v, digits = 1) => `${v < 0 ? '−' : ''}${Math.abs(v).toFixed(digits)}`;
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const sum = a => a.reduce((a, b) => a + b, 0);
+  const metric = (label, value, unit, detail, formula) => `<article><span>${label}</span><strong>${value}<small>${unit}</small></strong><em>${detail}</em><p class="metric-formula">${formula}</p></article>`;
+  setHTML('overview-metrics', [
+    metric('第5年营业收入', fmt(D.revenue[4]), '万', '四类收入共同构成', '85 + 60 + 18 + 5 = 168'),
+    metric('第5年净利润', fmt(D.netProfit[4]), '万', `净利率 ${fmt(D.netMargin[4])}%`, '51.5 − 2.6 = 48.9'),
+    metric('第5年期末现金', fmt(D.cashEnd[4]), '万', '含融资与营运资金占用', '17.1 + 44.1 − 2.0 = 59.2'),
+    metric('计划资金总额', fmt(sum(D.financingInflow), 0), '万', '首期与第2年分两次到位', '20 + 8 = 28')
+  ].join(''));
+  setHTML('finance-metrics', [
+    metric('五年累计净利润', fmt(sum(D.netProfit)), '万', '第5年末累计', '−7.4 − 8.4 + 2.5 + 21.6 + 48.9'),
+    metric('第5年保本收入', '≈ 79.8', '万', '文档毛利率近似口径', '期间费用 ÷ 毛利率 = 46.5 ÷ 58.3%'),
+    metric('第5年毛利率', '58.3', '%', '毛利润 98.0 万元', '98.0 ÷ 168.0 × 100% ≈ 58.3%'),
+    metric('五年投资现金流出', fmt(sum(D.investmentOutflow)), '万', '含首年开办支出 8.5 万元', '8.5 + 0.5 + 0.5 + 1.5 + 2.0')
+  ].join(''));
+  setHTML('cash-metrics', [
+    metric('第3年期末现金低点', fmt(D.cashEnd[2]), '万', '前三年需重点跟踪现金', '1.0 − 0.1 − 0.5 = 0.4'),
+    metric('第4年经营净现金流', fmt(D.operatingCash[3]), '万', '经营现金首次转正', '21.6 − 3.4 = 18.2'),
+    metric('第5年期末现金', fmt(D.cashEnd[4]), '万', '按文档表3列示', '17.1 + 44.1 − 2.0 = 59.2'),
+    metric('静态投资回收期', '≈ 4.9', '年', '第5年内回收', '累计项目净现金流覆盖投入的时点；文档结论')
+  ].join(''));
 
-  const fmt = (value, digits = 1) => `${value < 0 ? "−" : ""}${Math.abs(value).toFixed(digits)}`;
-  const pct = (value, digits = 1) => `${(value * 100).toFixed(digits)}%`;
-  const row = (label, values, options = {}) => {
-    const cells = values.map(value => `<td class="${value < 0 ? "negative" : ""}">${options.percent ? pct(value) : fmt(value)}${options.unit ? `<small>${options.unit}</small>` : ""}</td>`).join("");
-    return `<tr class="${options.total ? "total" : ""}"><td>${label}</td>${cells}</tr>`;
-  };
-  const setHTML = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
-
-  setHTML("profit-table", [
-    row("营业收入", data.revenue, { total: true }),
-    row("减：营业成本", data.cost),
-    row("毛利润", data.grossProfit, { total: true }),
-    row("减：期间费用", data.expenses),
-    row("净利润", data.netProfit, { total: true }),
-    row("净利率", data.netProfit.map((v, i) => v / data.revenue[i]), { percent: true })
-  ].join(""));
-
-  setHTML("revenue-table", [
-    row("产品销售（非遗材料包）", data.product),
-    row("订阅服务", data.subscription),
-    row("B端机构服务", data.b2b),
-    row("其他收入", data.other),
-    row("收入合计", data.revenue, { total: true })
-  ].join(""));
-
-  setHTML("cost-table", [
-    row("原材料与加工", data.cost.map(v => v * .62)),
-    row("包装与物流", data.cost.map(v => v * .18)),
-    row("供应链合作费用", data.cost.map(v => v * .2)),
-    row("营业成本合计", data.cost, { total: true })
-  ].join(""));
-
-  setHTML("expense-table", [
-    row("团队人力成本", data.team),
-    row("市场与获客", data.marketing),
-    row("平台与运营", data.operations),
-    row("公益与项目投入", data.impact),
-    row("管理、税费及其他", data.otherExpense),
-    row("期间费用合计", data.expenses, { total: true })
-  ].join(""));
-
-  setHTML("cash-table", [
-    row("期初现金", data.cashStart),
-    row("经营活动现金流", data.operatingCash),
-    row("投资活动现金流", data.investingCash),
-    row("筹资活动现金流", data.financingCash),
-    row("期末现金", data.cashEnd, { total: true })
-  ].join(""));
-
-  const svg = (width, height, body) => `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="五年财务趋势图">${body}</svg>`;
-  const grid = (width, height, left = 34, right = 12, top = 16, bottom = 30, max = 180, min = 0) => {
-    let out = "";
-    [0, .25, .5, .75, 1].forEach((ratio) => {
-      const y = top + (height - top - bottom) * ratio;
-      const value = max - (max - min) * ratio;
-      out += `<line x1="${left}" x2="${width - right}" y1="${y}" y2="${y}" stroke="#e8ede8" stroke-width="1"/>`;
-      out += `<text x="${left - 8}" y="${y + 3}" fill="#8a948c" font-size="9" text-anchor="end">${value.toFixed(0)}</text>`;
-    });
-    return out;
-  };
-  const points = (values, width, height, max, left = 34, right = 12, top = 16, bottom = 30, min = 0) => {
-    const plotW = width - left - right;
-    const plotH = height - top - bottom;
-    const range = max - min;
-    return values.map((v, i) => {
-      const clipped = Math.max(min, Math.min(max, v));
-      return `${left + plotW * i / (values.length - 1)},${top + plotH * (1 - (clipped - min) / range)}`;
-    }).join(" ");
-  };
-  const labels = (width, height, left = 34, right = 12, bottom = 30) => years.map((year, i) => `<text x="${left + (width - left - right) * i / 4}" y="${height - 8}" fill="#8a948c" font-size="10" text-anchor="middle">${year.replace("第", "").replace("年", "年")}</text>`).join("");
-
-  function drawOverviewChart() {
-    const w = 720, h = 245, max = 180;
-    const min = -10;
-    const revenuePoints = points(data.revenue, w, h, max, 34, 12, 16, 30, min);
-    const profitPoints = points(data.netProfit, w, h, max, 34, 12, 16, 30, min);
-    const yZero = 16 + (h - 16 - 30) * (1 - (0 - min) / (max - min));
-    const circles = (values, color) => values.map((v, i) => {
-      const [x, y] = points(values, w, h, max, 34, 12, 16, 30, min).split(" ")[i].split(",");
-      return `<circle cx="${x}" cy="${y}" r="4" fill="#fff" stroke="${color}" stroke-width="2"><title>${years[i]}：${fmt(v)}万元</title></circle>`;
-    }).join("");
-    setHTML("overview-chart", svg(w, h, `${grid(w,h,34,12,16,30,max,min)}<line x1="34" x2="708" y1="${yZero}" y2="${yZero}" stroke="#cfd9cf"/><polyline points="${revenuePoints}" fill="none" stroke="#4e9b72" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><polyline points="${profitPoints}" fill="none" stroke="#735b91" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 5"/>${circles(data.revenue,"#4e9b72")}${circles(data.netProfit,"#735b91")}${labels(w,h)}`));
+  function row(label, values, formula = '', total = false, percent = false) {
+    return `<tr${total ? ' class="total"' : ''}><th scope="row">${label}${formula ? `<small class="row-formula">${formula}</small>` : ''}</th>${values.map(v => `<td${v < 0 ? ' class="negative"' : ''}>${fmt(v)}${percent ? '%' : ''}</td>`).join('')}</tr>`;
   }
+  setHTML('profit-table', [
+    row('营业收入', D.revenue, '产品 + 订阅 + B端 + 其他', true),
+    row('减：营业成本', D.cost, '营业收入 × 成本率'),
+    row('毛利润', D.grossProfit, '营业收入 − 营业成本', true),
+    row('减：期间费用', D.expenses, '人力 + 营销 + 研发 + 管理'),
+    row('营业利润', D.operatingProfit, '毛利润 − 期间费用', true),
+    row('减：所得税', D.tax, 'max(营业利润 − 可弥补亏损, 0) × 5%'),
+    row('净利润', D.netProfit, '营业利润 − 所得税', true),
+    row('净利率', D.netMargin, '净利润 ÷ 营业收入 × 100%', false, true)
+  ].join(''));
+  setHTML('revenue-table', D.revenueMix.map(s => row(s.label, s.values)).join('') + row('收入合计', [D.revenue[0], D.revenue[4]], '四类收入之和', true));
+  setHTML('cost-table', [
+    row('营业成本', D.cost, '营业收入 × 成本率', true),
+    row('成本率', D.cost.map((v, i) => v / D.revenue[i] * 100), '营业成本 ÷ 营业收入 × 100%', false, true),
+    row('团队人力', D.team, '人数 × 月薪 × 在岗月份 ÷ 10,000'),
+    row('其他期间费用', D.expenses.map((v, i) => v - D.team[i]), '期间费用合计 − 团队人力'),
+    row('期间费用合计', D.expenses, '团队人力 + 其他期间费用', true)
+  ].join(''));
+  setHTML('cash-table', [
+    row('期初现金', D.cashStart, '上年期末现金；首年为 0'),
+    row('净利润', D.netProfit, '对应利润表净利润'),
+    row('减：营运资金增加', D.workingCapitalIncrease, '本年营运资金 − 上年营运资金'),
+    row('经营活动净现金流', D.operatingCash, '净利润 − 营运资金增加', true),
+    row('投资活动现金流出', D.investmentOutflow, '首年开办支出；后续系统迭代与设备'),
+    row('筹资活动现金流入', D.financingInflow, '首期 20 万元，第2年追加 8 万元'),
+    row('期末现金余额', D.cashEnd, '期初 + 经营净流 − 投资流出 + 筹资流入', true)
+  ].join(''));
+  const L = D.laborSensitivity;
+  setHTML('labor-table', L.cost.map((v, i) => `<tr${i === 1 ? ' class="total"' : ''}><th scope="row">${fmt(v)}</th><td>${L.monthlySalary[i].toLocaleString('zh-CN')}</td><td class="${L.profit[i] < 0 ? 'negative' : ''}">${fmt(L.profit[i])}</td></tr>`).join(''));
 
-  function drawCashChart() {
-    const w = 720, h = 245, max = 70, left = 34, right = 12, top = 16, bottom = 30;
-    const pts = points(data.cashEnd, w, h, max, left, right, top, bottom);
-    const area = `${left},${h-bottom} ${pts} ${w-right},${h-bottom}`;
-    const dots = data.cashEnd.map((v, i) => {
-      const [x, y] = pts.split(" ")[i].split(",");
-      return `<circle cx="${x}" cy="${y}" r="4" fill="#fff" stroke="#4e9b72" stroke-width="2"><title>${years[i]}：${fmt(v)}万元</title></circle>`;
-    }).join("");
-    setHTML("cash-chart", svg(w,h,`${grid(w,h,left,right,top,bottom,max)}<polygon points="${area}" fill="#dcefe1" opacity=".72"/><polyline points="${pts}" fill="none" stroke="#4e9b72" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${dots}${labels(w,h,left,right,bottom)}`));
+  const colors = { green: '#4e9b72', purple: '#735b91', orange: '#d98c4a', red: '#bd5048' };
+  const svgText = (x, y, value, options = '') => `<text x="${x}" y="${y}" ${options}>${esc(value)}</text>`;
+  function frame(id, min, max, ticks, labels, title, description, unit = '万元') {
+    const w = Math.max(310, $(id).clientWidth || 620), h = 260, left = 49, right = 32, top = 28, bottom = 34;
+    const pw = w-left-right, ph = h-top-bottom;
+    const x = i => left + pw * i / (labels.length-1);
+    const y = v => top + ph * (max-v) / (max-min);
+    let body = ticks.map(v => `<line x1="${left}" x2="${w-right}" y1="${y(v)}" y2="${y(v)}" stroke="${v === 0 ? '#adbfb0' : '#e8ede8'}"${v === 0 ? ' stroke-width="1.4"' : ''}/>${svgText(left-9,y(v)+4,fmt(v,0),'text-anchor="end" class="axis-text"')}`).join('');
+    body += labels.map((s,i) => svgText(x(i),h-8,s,'text-anchor="middle" class="axis-text"')).join('');
+    body += svgText(left,13,unit,'class="axis-unit"');
+    const wrap = content => `<svg viewBox="0 0 ${w} ${h}" role="img" aria-labelledby="${id}-title ${id}-desc"><title id="${id}-title">${esc(title)}</title><desc id="${id}-desc">${esc(description)}</desc>${body}${content}</svg>`;
+    return { x, y, wrap, w, h, pw, left, right };
   }
-
-  function drawRevenueChart() {
-    const max = 180;
-    const series = [["product", data.product], ["subscribe", data.subscription], ["b2b", data.b2b], ["other", data.other]];
-    const blocks = data.revenue.map((total, i) => {
-      let html = `<div class="bar-group" title="${years[i]}：${fmt(total)}万元">`;
-      series.forEach(([kind, values]) => { html += `<div class="bar ${kind}" style="height:${Math.max(2, values[i] / max * 220)}px"></div>`; });
-      return `${html}<span class="bar-label">${years[i]}</span></div>`;
-    }).join("");
-    setHTML("revenue-chart", blocks);
+  function lineChart(id, series, min, max, ticks, unit = '万元') {
+    const describe = series.map(s => `${s.label}：${s.values.map((v,i) => `${D.years[i]} ${fmt(v)}${unit}`).join('，')}`).join('；');
+    const f = frame(id,min,max,ticks,D.years,'五年'+series.map(s=>s.label).join('与')+'趋势',describe,unit);
+    const content = series.map((s,k) => {
+      const path = s.values.map((v,i)=>`${f.x(i)},${f.y(v)}`).join(' ');
+      return `<polyline points="${path}" fill="none" stroke="${s.color}" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"${k ? ' stroke-dasharray="6 4"' : ''}/>` + s.values.map((v,i) => {
+        const tip = `${D.years[i]} · ${s.label}：${fmt(v)} ${unit}`;
+        const dy = k ? 19 : -12;
+        return `<g tabindex="0" data-tip="${esc(tip)}" aria-label="${esc(tip)}"><circle cx="${f.x(i)}" cy="${f.y(v)}" r="13" fill="transparent"/><circle cx="${f.x(i)}" cy="${f.y(v)}" r="4" fill="white" stroke="${s.color}" stroke-width="2"/>${svgText(f.x(i),f.y(v)+dy,fmt(v),'text-anchor="middle" class="value-label" fill="'+s.color+'"')}</g>`;
+      }).join('');
+    }).join('');
+    setHTML(id,f.wrap(content));
   }
-
-  function selectPage(id) {
-    document.querySelectorAll(".section").forEach(section => section.classList.toggle("active", section.id === id));
-    document.querySelectorAll(".nav").forEach(nav => nav.classList.toggle("active", nav.dataset.go === id));
-    const titles = { overview: "项目概览", finance: "财务总览", revenue: "收入结构", cost: "成本与费用", cash: "利润与现金", risk: "风险防范" };
-    document.getElementById("title").textContent = titles[id] || titles.overview;
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  function costChart() {
+    const ss = [{label:'收入',values:D.revenue,color:colors.green},{label:'营业成本',values:D.cost,color:colors.orange},{label:'期间费用',values:D.expenses,color:colors.purple}];
+    const f = frame('cost-chart',0,180,[0,45,90,135,180],D.years,'五年收入、成本与费用对比',ss.map(s=>s.label+' '+s.values.join('、')).join('；'));
+    const bw = Math.min(25,f.pw/26);
+    let content = '';
+    ss.forEach((s,k) => s.values.forEach((v,i) => {
+      const tip = `${D.years[i]} · ${s.label}：${fmt(v)} 万元`;
+      const x = f.x(i)+(k-1)*bw-bw*.39;
+      content += `<rect tabindex="0" data-tip="${esc(tip)}" aria-label="${esc(tip)}" x="${x}" y="${f.y(v)}" width="${bw*.78}" height="${f.y(0)-f.y(v)}" rx="3" fill="${s.color}"/>`;
+    }));
+    setHTML('cost-chart',f.wrap(content));
   }
+  function barChart(id, labels, values, selected = -1) {
+    const min = Math.min(0,...values)<0 ? -5 : 0, max = id === 'labor-chart' ? 6 : 60;
+    const ticks = id === 'labor-chart' ? [-4,-2,0,2,4,6] : [0,15,30,45,60];
+    const description = labels.map((l,i)=>`${l}：净利润 ${fmt(values[i])} 万元`).join('；');
+    const f = frame(id,min,max,ticks,labels,'净利润敏感性',description);
+    const width = Math.min(68,f.pw/(labels.length*2.2));
+    const content = values.map((v,i) => {
+      const color = v < 0 ? colors.red : colors.green;
+      const tip = `${labels[i]} · 净利润：${fmt(v)} 万元`;
+      const top = Math.min(f.y(v),f.y(0)), height = Math.abs(f.y(v)-f.y(0));
+      return `<g tabindex="0" data-tip="${esc(tip)}" aria-label="${esc(tip)}"><rect x="${f.x(i)-width/2}" y="${top}" width="${width}" height="${Math.max(1,height)}" rx="4" fill="${color}" opacity="${selected < 0 || i === selected ? 1 : .35}"/>${svgText(f.x(i),v>=0?f.y(v)-9:f.y(v)+18,fmt(v),'text-anchor="middle" class="value-label" fill="'+color+'"')}</g>`;
+    }).join('');
+    setHTML(id,f.wrap(content));
+  }
+  let mixIndex = 1, scenarioIndex = 2;
+  function drawMix() {
+    const total = D.revenue[mixIndex ? 4 : 0];
+    let offset = 0;
+    const r = 72, circumference = 2*Math.PI*r;
+    const arcs = D.revenueMix.map(s => {
+      const share = s.values[mixIndex]/total;
+      const arc = `<circle cx="110" cy="110" r="${r}" fill="none" stroke="${s.color}" stroke-width="25" stroke-dasharray="${share*circumference} ${circumference}" stroke-dashoffset="${-offset*circumference}" transform="rotate(-90 110 110)"><title>${s.label}：${fmt(s.values[mixIndex])}万元，占比${fmt(share*100)}%</title></circle>`;
+      offset += share; return arc;
+    }).join('');
+    setHTML('revenue-chart',`<svg viewBox="0 0 220 220" role="img" aria-label="${mixIndex?'第5年':'第1年'}收入构成，总额${fmt(total)}万元">${arcs}<text x="110" y="103" text-anchor="middle" class="donut-total">${fmt(total)}</text><text x="110" y="128" text-anchor="middle" class="donut-unit">万元 / ${mixIndex?'第5年':'第1年'}</text></svg><div class="mix-legend">${D.revenueMix.map(s => `<div><span class="mix-name"><i style="background:${s.color}"></i>${s.label}</span><b>${fmt(s.values[mixIndex])}<small> 万</small></b><em>${fmt(s.values[mixIndex]/total*100)}%</em></div>`).join('')}</div>`);
+  }
+  function drawScenario() {
+    const s = D.userSensitivity, i = scenarioIndex;
+    setHTML('scenario-summary',`<div><span>家庭用户</span><b>${s.households[i].toLocaleString('zh-CN')}<small> 户</small></b></div><div><span>营业收入</span><b>${fmt(s.revenue[i])}<small> 万</small></b></div><div><span>净利润</span><b>${fmt(s.profit[i])}<small> 万</small></b></div><div><span>静态回收</span><b>${s.payback[i]}</b></div>`);
+    barChart('user-chart',s.achievement.map(v=>`${v}% 达成`),s.profit,i);
+  }
+  function redraw() {
+    lineChart('overview-chart',[{label:'营业收入',values:D.revenue,color:colors.green},{label:'净利润',values:D.netProfit,color:colors.purple}],-20,180,[-20,30,80,130,180]);
+    lineChart('margin-chart',[{label:'毛利率',values:D.grossProfit.map((v,i)=>v/D.revenue[i]*100),color:colors.green},{label:'净利率',values:D.netMargin,color:colors.purple}],-120,80,[-120,-70,-20,30,80],'%');
+    lineChart('cash-chart',[{label:'期末现金',values:D.cashEnd,color:colors.green},{label:'经营净现金流',values:D.operatingCash,color:colors.purple}],-20,70,[-20,0,20,40,60]);
+    costChart(); drawMix(); drawScenario();
+    barChart('labor-chart',L.cost.map(v=>`人力 ${v}万`),L.profit);
+  }
+  $('mix-switch').addEventListener('click', e => {
+    const button = e.target.closest('[data-mix]'); if (!button) return;
+    mixIndex = Number(button.dataset.mix);
+    $('mix-switch').querySelectorAll('button').forEach(b=>{const active = b === button;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',String(active));});drawMix();
+  });
+  $('scenario-switch').addEventListener('click', e => {
+    const button = e.target.closest('[data-scenario]'); if (!button) return;
+    scenarioIndex = Number(button.dataset.scenario);
+    $('scenario-switch').querySelectorAll('button').forEach(b=>{const active=b===button;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',String(active));});drawScenario();
+  });
 
-  document.querySelectorAll("[data-go], [data-jump]").forEach(el => el.addEventListener("click", () => selectPage(el.dataset.go || el.dataset.jump)));
-  const modal = document.getElementById("modal");
-  document.getElementById("method").addEventListener("click", () => modal.classList.add("open"));
-  document.getElementById("close").addEventListener("click", () => modal.classList.remove("open"));
-  modal.addEventListener("click", event => { if (event.target === modal) modal.classList.remove("open"); });
-  document.addEventListener("keydown", event => { if (event.key === "Escape") modal.classList.remove("open"); });
+  const tooltip = $('chart-tooltip');
+  function showTip(target, event) {
+    if (!target) return;
+    tooltip.textContent = target.dataset.tip;tooltip.hidden = false;
+    const rect = target.getBoundingClientRect();
+    const x = event && event.clientX || rect.left + rect.width/2;
+    const y = event && event.clientY || rect.top;
+    tooltip.style.left = `${Math.max(8,Math.min(window.innerWidth-tooltip.offsetWidth-8,x+12))}px`;
+    tooltip.style.top = `${Math.max(8,Math.min(window.innerHeight-tooltip.offsetHeight-8,y-tooltip.offsetHeight-12))}px`;
+  }
+  document.addEventListener('pointerover',e=>showTip(e.target.closest('[data-tip]'),e));
+  document.addEventListener('pointermove',e=>{const t=e.target.closest('[data-tip]');if(t)showTip(t,e);});
+  document.addEventListener('pointerout',e=>{if(e.target.closest('[data-tip]'))tooltip.hidden=true;});
+  document.addEventListener('focusin',e=>showTip(e.target.closest('[data-tip]')));
+  document.addEventListener('focusout',()=>{tooltip.hidden=true;});
+  document.addEventListener('click',e=>{const t=e.target.closest('[data-tip]');if(t)showTip(t,e);else tooltip.hidden=true;});
 
-  drawOverviewChart();
-  drawCashChart();
-  drawRevenueChart();
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let page = 'overview', photoIndex = 0, photoPaused = reducedMotion.matches, photoHover = false, timer = null;
+  const gallery = document.querySelector('.activity-gallery');
+  const photoButton = $('photo-play');
+  function syncTimer() {
+    clearInterval(timer);timer=null;
+    photoButton.textContent=photoPaused?'▶ 播放':'Ⅱ 暂停';
+    photoButton.setAttribute('aria-label',photoPaused?'播放自动轮播':'暂停自动轮播');
+    if(!photoPaused&&!photoHover&&!document.hidden&&page==='overview'&&!$('modal').open)timer=setInterval(()=>showPhoto(photoIndex+1,false),5000);
+  }
+  function showPhoto(index, manual = true) {
+    photoIndex = (index+D.photos.length)%D.photos.length;
+    const photo = D.photos[photoIndex];
+    $('activity-photo').src = `assets/activities/${photo.file}`;
+    $('activity-photo').alt = photo.alt;
+    $('photo-number').textContent=`${String(photoIndex+1).padStart(2,'0')} / ${String(D.photos.length).padStart(2,'0')}`;
+    $('photo-caption').textContent=photo.caption;
+    $('photo-dots').querySelectorAll('button').forEach((b,i)=>{const active=i===photoIndex;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
+    if(manual){photoPaused=true;$('photo-status').textContent=`第${photoIndex+1}张，共${D.photos.length}张。${photo.alt}`;}
+    const next = new Image();next.src=`assets/activities/${D.photos[(photoIndex+1)%D.photos.length].file}`;
+    syncTimer();
+  }
+  setHTML('photo-dots',D.photos.map((p,i)=>`<button class="photo-dot${i===0?' active':''}" data-photo="${i}" aria-label="显示第${i+1}张：${esc(p.alt)}" aria-pressed="${i===0}"><span></span></button>`).join(''));
+  $('photo-prev').addEventListener('click',()=>showPhoto(photoIndex-1));
+  $('photo-next').addEventListener('click',()=>showPhoto(photoIndex+1));
+  $('photo-dots').addEventListener('click',e=>{const b=e.target.closest('[data-photo]');if(b)showPhoto(Number(b.dataset.photo));});
+  photoButton.addEventListener('click',()=>{photoPaused=!photoPaused;syncTimer();});
+  gallery.addEventListener('pointerenter',()=>{photoHover=true;syncTimer();});
+  gallery.addEventListener('pointerleave',()=>{photoHover=false;syncTimer();});
+  gallery.addEventListener('focusin',e=>{if(e.target!==photoButton){photoPaused=true;syncTimer();}});
+  $('gallery-stage').addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();showPhoto(photoIndex+(e.key==='ArrowLeft'?-1:1));}});
+  let touchStart=null;
+  $('gallery-stage').addEventListener('touchstart',e=>{touchStart={x:e.touches[0].clientX,y:e.touches[0].clientY};},{passive:true});
+  $('gallery-stage').addEventListener('touchend',e=>{if(!touchStart)return;const dx=e.changedTouches[0].clientX-touchStart.x,dy=e.changedTouches[0].clientY-touchStart.y;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy))showPhoto(photoIndex+(dx>0?-1:1));touchStart=null;},{passive:true});
+  document.addEventListener('visibilitychange',syncTimer);
+  reducedMotion.addEventListener('change',e=>{if(e.matches){photoPaused=true;syncTimer();}});
+
+  const titles = {overview:'项目介绍',finance:'财务总览',revenue:'收入结构',cost:'成本与费用',cash:'利润与现金',risk:'风险防范'};
+  function selectPage(id, updateHash = true) {
+    if(!Object.hasOwn(titles,id))id='overview';page=id;
+    document.querySelectorAll('.section').forEach(s=>{const active=s.id===id;s.classList.toggle('active',active);s.hidden=!active;});
+    document.querySelectorAll('.nav').forEach(n=>{const active=n.dataset.go===id;n.classList.toggle('active',active);if(active)n.setAttribute('aria-current','page');else n.removeAttribute('aria-current');});
+    $('title').textContent=titles[id];document.title=`抚艺工坊｜${titles[id]}`;
+    tooltip.hidden=true;
+    if(updateHash&&location.hash!==`#${id}`)location.hash=id;
+    syncTimer();requestAnimationFrame(redraw);
+    window.scrollTo({top:0,behavior:reducedMotion.matches?'instant':'smooth'});
+  }
+  document.querySelectorAll('[data-go], [data-jump]').forEach(b=>b.addEventListener('click',()=>selectPage(b.dataset.go||b.dataset.jump)));
+  window.addEventListener('hashchange',()=>selectPage(location.hash.slice(1),false));
+  const modal=$('modal');
+  const openModal=()=>{modal.showModal();syncTimer();};
+  $('method').addEventListener('click',openModal);$('source-details').addEventListener('click',openModal);
+  $('close').addEventListener('click',()=>modal.close());
+  modal.addEventListener('click',e=>{if(e.target===modal){const r=modal.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)modal.close();}});
+  modal.addEventListener('close',syncTimer);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')tooltip.hidden=true;});
+  let resizeTimer;
+  window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(redraw,120);});
+  showPhoto(0,false);selectPage(location.hash.slice(1)||'overview',false);
 })();
