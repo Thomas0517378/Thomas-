@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>抚艺工坊｜财务与风险驾驶舱</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side">
+  <div class="brand"><b>抚</b><div><strong>抚艺工坊</strong><small>财务与风险驾驶舱</small></div></div>
+  <label>WORKSPACE</label>
+  <nav>
+    <button class="nav active" data-go="overview">⌂　项目概览</button>
+    <button class="nav" data-go="finance">▣　财务总览</button>
+    <button class="nav" data-go="revenue">↗　收入结构</button>
+    <button class="nav" data-go="cost">⌁　成本与费用</button>
+    <button class="nav" data-go="cash">◌　利润与现金</button>
+    <button class="nav" data-go="risk">!　风险防范</button>
+  </nav>
+  <div class="side-foot"><i></i><div><b>数据口径</b><small>中性情景 · 预测值</small></div></div>
+</aside>
+<main class="main">
+<header class="top"><div><small>FINANCIAL CONTROL CENTER / 2026</small><h1 id="title">项目概览</h1></div><div class="top-actions"><span class="pill">● 中性情景</span><button id="method">?</button></div></header>
+<div class="content">
+<section id="overview" class="section active">
+  <div class="hero-grid">
+    <div class="hero"><small>FUIYI WORKSHOP / 16279680</small><h2>把非遗手艺，<em>变成可持续的陪伴。</em></h2><p>抚艺工坊以适老化非遗材料包、订阅服务和机构合作为主要收入来源。本驾驶舱用于跟踪五年预测、资金安全和风险整改。</p><div class="tags"><span>非遗 × 银发经济</span><span>预测数据</span><span>需持续补证</span></div></div>
+    <div class="hero-note"><span>审查提示 <b>12 项</b></span><h3>先核清资金，再谈回本。</h3><p>主要表格加减关系基本正确，但初始投入衔接、追加资金来源、收入边界和成本完整性仍需整改。</p><button data-jump="risk">查看风险与整改　→</button></div>
+  </div>
+  <div class="metrics">
+    <article><span>第 5 年营业收入</span><strong>¥168.0<small>万</small></strong><em>较第 1 年增长 24.7 倍</em></article>
+    <article><span>第 5 年净利润</span><strong>¥45.5<small>万</small></strong><em>净利率 27.1%</em></article>
+    <article><span>第 5 年期末现金</span><strong>¥64.3<small>万</small></strong><em>依赖资金按期到位</em></article>
+    <article><span>原模型待整改项</span><strong>12<small>项</small></strong><em>4 项优先整改</em></article>
+  </div>
+  <div class="grid2">
+    <article class="panel"><div class="panel-head"><div><small>5-YEAR OUTLOOK</small><h3>收入与净利润走势</h3></div><span class="legend">● 收入　<span>●</span> 净利润</span></div><div id="overview-chart" class="chart"></div><div class="chart-foot">单位：万元 <span>第 3 年为预测转正点</span></div></article>
+    <article class="panel"><div class="panel-head"><div><small>CONTROL SIGNALS</small><h3>关键控制信号</h3></div></div><div class="signals">
+      <div><i class="ok">✓</i><p><b>表内加减关系</b><small>五年主要汇总数可复算</small></p><strong class="green">已复核</strong></div>
+      <div><i class="warn">!</i><p><b>第 2 年资金</b><small>现金余额依赖额外 5 万元融资</small></p><strong class="yellow">待补证</strong></div>
+      <div><i class="bad">×</i><p><b>定价毛利率</b><small>68—98 元与 50%—70%不匹配</small></p><strong class="red">需重算</strong></div>
+      <div><i class="warn">!</i><p><b>订阅捐赠</b><small>8%—12%承诺尚未明确列支</small></p><strong class="yellow">待补证</strong></div>
+    </div></article>
+  </div>
+</section>
+<section id="finance" class="section">
+  <div class="heading"><div><small>FINANCE OVERVIEW / 5 YEARS</small><h2>财务总览</h2><p>按中性情景整理的五年预测，金额单位均为万元。</p></div><span class="badge">预测数据 · 中性情景</span></div>
+  <div class="metrics compact"><article><span>累计净利润</span><strong>57.8<small>万</small></strong><em>第 5 年末</em></article><article><span>第 3 年税前盈亏平衡收入</span><strong>42.8<small>万</small></strong><em>原模型收入 53 万</em></article><article><span>第 5 年毛利率</span><strong>58.3<small>%</small></strong><em>较第 1 年 +12.7 个百分点</em></article><article><span>五年投资现金流出</span><strong>13.5<small>万</small></strong><em>另有第 2 年融资 5 万</em></article></div>
+  <article class="panel table-panel"><div class="panel-head"><div><small>P&L SNAPSHOT</small><h3>五年利润表</h3></div><button data-jump="cash">查看现金流 →</button></div><div class="scroll"><table><thead><tr><th>项目</th><th>第 1 年</th><th>第 2 年</th><th>第 3 年</th><th>第 4 年</th><th>第 5 年</th></tr></thead><tbody id="profit-table"></tbody></table></div></article>
+  <div class="cards3"><article><b>01</b><h3>收入</h3><p>产品销售、订阅服务、B 端机构服务及其他收入。</p><button data-jump="revenue">查看分类 →</button></article><article><b>02</b><h3>成本与费用</h3><p>区分营业成本和期间费用，避免重复或漏列。</p><button data-jump="cost">查看分类 →</button></article><article><b>03</b><h3>现金与回收</h3><p>经营、投资、筹资三类现金流和投资回收口径。</p><button data-jump="cash">查看分类 →</button></article></div>
+</section>
+<section id="revenue" class="section">
+  <div class="heading"><div><small>REVENUE ARCHITECTURE</small><h2>收入结构</h2><p>拆到收入来源、订单逻辑和需要补充的证据。</p></div><span class="badge blue">收入预测</span></div>
+  <article class="panel"><div class="panel-head"><div><small>MIX BY YEAR</small><h3>收入增长与构成</h3></div><span class="legend">● 产品　<span class="purple">●</span> 订阅　<span class="orange">●</span> B端　<span class="green">●</span> 其他</span></div><div id="revenue-chart" class="stacked"></div></article>
+  <div class="grid2 lower"><article class="panel table-panel"><div class="panel-head"><div><small>REVENUE DETAIL</small><h3>收入预测表</h3></div></div><div class="scroll"><table><thead><tr><th>收入项目</th><th>第 1 年</th><th>第 2 年</th><th>第 3 年</th><th>第 4 年</th><th>第 5 年</th></tr></thead><tbody id="revenue-table"></tbody></table></div></article>
+  <article class="panel"><div class="panel-head"><div><small>REVENUE CHECK</small><h3>收入核验要点</h3></div></div><ul class="checks"><li><b>01</b>产品销售收入是否已排除订阅购买次数？<em>口径待核</em></li><li><b>02</b>首年 200 户是年末用户还是平均活跃用户？<em>口径待核</em></li><li><b>03</b>每类收入是否有“数量 × 单价”底稿？<em>需补证</em></li><li class="done"><b>04</b>五年收入合计与表内分类加总一致。<em>已复核</em></li></ul></article></div>
+  <article class="note"><b>关键整改提示</b><p>第 7.2.1 节写明“每家庭年均购买 4 次含订阅折算”，随后又单列订阅收入 2 万元，存在重复计算风险。整改时应把非订阅零售、订阅履约、机构订单和其他收入分开建模。</p></article>
+</section>
+<section id="cost" class="section">
+  <div class="heading"><div><small>COST & OPERATING EXPENSES</small><h2>成本与费用</h2><p>把履约成本、团队投入和管理支出放在同一张控制表里。</p></div><span class="badge redbg">费用口径需统一</span></div>
+  <div class="grid2"><article class="panel table-panel"><div class="panel-head"><div><small>OPERATING COST</small><h3>营业成本预测</h3></div></div><div class="scroll"><table><thead><tr><th>成本项目</th><th>第 1 年</th><th>第 2 年</th><th>第 3 年</th><th>第 4 年</th><th>第 5 年</th></tr></thead><tbody id="cost-table"></tbody></table></div></article><article class="panel table-panel"><div class="panel-head"><div><small>PERIOD EXPENSES</small><h3>期间费用预测</h3></div></div><div class="scroll"><table><thead><tr><th>费用项目</th><th>第 1 年</th><th>第 2 年</th><th>第 3 年</th><th>第 4 年</th><th>第 5 年</th></tr></thead><tbody id="expense-table"></tbody></table></div></article></div>
+  <div class="costs"><article><b>箱</b><div><h3>产品成本</h3><p>原材料、加工、包装与供应链合作费用。原文假设从收入的 40% 降至 32%。</p></div></article><article><b>人</b><div><h3>人力成本</h3><p>第 1 年 6 万元，第 5 年 20 万元。需补充岗位、在岗月份和社保口径。</p></div></article><article><b>善</b><div><h3>捐赠与附赠</h3><p>订阅收入建议计提 8%—12%公益捐赠，赠品与积分兑换也应纳入履约成本。</p></div></article></div>
+  <article class="panel formula"><div class="panel-head"><div><small>UNIT ECONOMICS</small><h3>单品毛利率检查</h3></div><span class="badge redbg">需重算</span></div><div class="formula-grid"><div><small>价格区间</small><b>68—98 元</b></div><div><small>综合成本</small><b>40—50 元</b></div><div><small>实际边界毛利率</small><b class="red">26.5%—59.2%</b></div><div><small>原文声称毛利率</small><b class="strike">50%—70%</b></div></div><p>毛利率 =（售价 − 同口径成本）÷ 售价。原文区间无法支持 50%—70%，应按 SKU 和销量加权重算。</p></article>
+</section>
+<section id="cash" class="section">
+  <div class="heading"><div><small>PROFIT / CASH / PAYBACK</small><h2>利润与现金</h2><p>利润转正、现金安全和投资回收必须使用同一套时间口径。</p></div><span class="badge greenbg">现金流重点</span></div>
+  <div class="grid2"><article class="panel"><div class="panel-head"><div><small>CASH POSITION</small><h3>期末现金余额</h3></div><span class="legend green">● 现金余额</span></div><div id="cash-chart" class="chart"></div><div class="chart-foot">单位：万元 <span>第 2 年含筹资流入 5 万元</span></div></article><article class="panel table-panel"><div class="panel-head"><div><small>CASH FLOW</small><h3>现金流量表</h3></div></div><div class="scroll"><table><thead><tr><th>项目</th><th>第 1 年</th><th>第 2 年</th><th>第 3 年</th><th>第 4 年</th><th>第 5 年</th></tr></thead><tbody id="cash-table"></tbody></table></div></article></div>
+  <div class="payback"><article><span>第 3 年</span><b>年度利润转正</b><p>净利润 4.7 万元，但对收入达成较敏感。</p></article><div class="road"><i></i><i class="active"></i><i></i><i></i><i></i><small>第 1 年　　　 第 2 年　　　 第 3 年　　　 第 4 年　　　 第 5 年</small></div><article><span>第 5 年</span><b>原模型累计利润转正</b><p>累计净利润 57.8 万元，回收结论仍需按净现金流重算。</p></article></div>
+  <article class="note alert"><b>现金安全警报</b><p>按原表第 2 年经营现金支出 27.4 万元折算，期末现金 3.7 万元只能覆盖约 1.6 个月平均经营支出。若去掉第 2 年追加的 5 万元融资，期末现金约为 −1.3 万元。</p></article>
+</section>
+<section id="risk" class="section">
+  <div class="heading"><div><small>RISK PREVENTION / CONTROL PLAN</small><h2>风险防范</h2><p>把风险写成可监测、可触发、可执行的动作。</p></div><span class="badge redbg">风险优先级</span></div>
+  <div class="risk-stats"><div><span>重大 / 高风险</span><b>3</b><small>优先建立预警线</small></div><div><span>需补证事项</span><b>6</b><small>合同、报价、资金凭证</small></div><div><span>最低现金覆盖</span><b>1.6<small>月</small></b><small>按第 2 年平均支出</small></div><div><span>建议监控频率</span><b>月度</b><small>季度做情景复盘</small></div></div>
+  <div class="grid2"><article class="panel matrix-panel"><div class="panel-head"><div><small>RISK MATRIX</small><h3>风险等级分布</h3></div></div><div class="matrix"><div class="matrix-grid"><span class="node high n1">现金流</span><span class="node high n2">需求验证</span><span class="node mid n3">融资</span><span class="node mid n4">成本控制</span><span class="node low n5">合规</span><span class="node mid n6">用户获取</span></div><div class="axis x">低概率　　　　　　　　 中概率　　　　　　　　 高概率</div><div class="axis y">高影响<br><br>中影响<br><br>低影响</div></div></article><article class="panel"><div class="panel-head"><div><small>EARLY WARNING</small><h3>预警指标</h3></div></div><div class="triggers"><div><b>现金</b><span>期末现金覆盖刚性支出少于 3 个月</span><em>立即复盘</em></div><div><b>收入</b><span>连续两月收入低于月度计划 80%</span><em>调整获客</em></div><div><b>复购</b><span>复购率低于基准值 10 个百分点</span><em>优化产品</em></div><div><b>成本</b><span>单位综合成本超预算 10%</span><em>重谈供应</em></div></div></article></div>
+  <div class="risk-cards"><article class="risk redline"><span>重大风险　·　财务成本</span><h3>现金流断裂</h3><p>前期平台、市场和供应链投入集中，且第 2 年现金余额依赖未说明的 5 万元融资。</p><b>防范动作</b><small>建立 24 个月月度现金预算；融资未到账时冻结非必要推广和扩张支出。</small></article><article class="risk orangeline"><span>高风险　·　市场竞争</span><h3>需求验证不足</h3><p>银发用户的实际付费、订阅留存和机构采购仍缺少试销与合同证据。</p><b>防范动作</b><small>先做 30—50 户小规模试销，按转化、复购和退款数据更新模型。</small></article><article class="risk yellowline"><span>中风险　·　运营成本</span><h3>履约成本漏列</h3><p>捐赠、附赠成品、积分兑换和专家服务的成本归属不清。</p><b>防范动作</b><small>建立 SKU 成本卡，逐项列出赠品、售后和公益承诺。</small></article><article class="risk blueline"><span>中风险　·　政策合规</span><h3>健康服务表述</h3><p>“认知干预”“处方级内容”等表述可能超出普通文创服务的证据和资质范围。</p><b>防范动作</b><small>补充合作机构、专家授权和内容边界；未验证前使用“手作陪伴与训练”表述。</small></article></div>
+  <article class="panel timeline"><div class="panel-head"><div><small>90-DAY ACTION PLAN</small><h3>90 天风险防范行动</h3></div><span class="badge blue">可执行</span></div><div class="timeline-grid"><div><b>01 · 第 1—15 天</b><p>整理资金凭证、供应商报价、SKU 成本和客户订单口径。</p></div><div><b>02 · 第 16—45 天</b><p>完成 30—50 户试销，更新收入、复购、退款和现金回款假设。</p></div><div><b>03 · 第 46—90 天</b><p>重算三种情景、投资回收期和最低现金余额，由团队签字复核。</p></div></div></article>
+</section>
+</div></main></div>
+<div class="modal" id="modal"><div class="modal-card"><button id="close">×</button><small>DATA METHODOLOGY</small><h2>数据口径说明</h2><p>网站内容来自抚艺工坊商业计划书第七章及前文业务方案，使用原文“中性情景”五年预测。</p><div class="method"><b class="green">●</b><p><strong>已复核</strong><br>表内加减、毛利率、净利率和现金变化可由原表重算。</p></div><div class="method"><b class="yellow">●</b><p><strong>待补证</strong><br>资金到账、价格依据、用户计划、捐赠承诺和税费处理需要合同或底稿。</p></div><div class="method"><b class="red">●</b><p><strong>需重算</strong><br>收入边界、单位成本、初始投入与投资回收期需要统一口径后更新。</p></div><small>这是一份预测管理工具，不是实际经营报表或审计鉴证。</small></div></div>
+<script src="app.js"></script>
+</body>
+</html>
